@@ -1,0 +1,79 @@
+{
+  "persist_indexes": true,
+  "automatic_index_updates": true,
+  "types": [
+    {
+      "type": "offering",
+      "on_path": "offerings",
+      "rdf_type": "http://purl.org/goodrelations/v1#Offering",
+      "properties": {
+        "name": "http://purl.org/goodrelations/v1#name",
+        "description": "http://purl.org/goodrelations/v1#description",
+        "pod": "http://mu.semte.ch/vocabularies/ext/pod",
+        "seller": {
+          "via": "^http://purl.org/goodrelations/v1#offers",
+          "rdf_type": "http://purl.org/goodrelations/v1#BusinessEntity",
+          "properties": {
+            "legalName": "http://purl.org/goodrelations/v1#legalName",
+            "webId": "http://purl.org/goodrelations/v1#description"
+          }
+        },
+        "price": {
+          "via": "http://purl.org/goodrelations/v1#hasPriceSpecification",
+          "rdf_type": "http://purl.org/goodrelations/v1#PriceSpecification",
+          "properties": {
+            "priceCurrency": "http://purl.org/goodrelations/v1#hasCurrency",
+            "price": "http://purl.org/goodrelations/v1#hasCurrencyValue"
+          }
+        },
+        "product": {
+          "via": "http://purl.org/goodrelations/v1#includes",
+          "rdf_type": "http://purl.org/goodrelations/v1#ProductOrService",
+          "properties": {
+            "name": "http://purl.org/goodrelations/v1#name",
+            "description": "http://purl.org/goodrelations/v1#description",
+            "image": "http://schema.org/image"
+          }
+        }
+      },
+      "mappings": {
+        "properties": {
+          "name": {
+            "type": "text"
+          },
+          "description": {
+            "type": "text"
+          },
+          "seller.legalName": {
+            "type": "text"
+          },
+          "price.price": {
+            "type": "double"
+          },
+          "price.priceCurrency": {
+            "type": "text"
+          },
+          "product.name": {
+            "type": "text"
+          },
+          "product.description": {
+            "type": "text"
+          },
+          "product.image": {
+            "type": "text"
+          }
+        }
+      }
+    }
+  ],
+  "eager_indexing_groups": [[
+    {
+      "name": "clean",
+      "variables": []
+    },
+    {
+      "name": "public",
+      "variables": []
+    }
+  ]]
+}

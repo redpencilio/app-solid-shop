@@ -1,0 +1,104 @@
+version: '3.4'
+
+services:
+  identifier:
+    image: semtech/mu-identifier:1.9.1
+    environment:
+      SESSION_COOKIE_SECURE: "on"
+      DEFAULT_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER: "*"
+      DEFAULT_MU_AUTH_ALLOWED_GROUPS_HEADER: "[{\"variables\":[],\"name\":\"clean\"},{\"variables\":[],\"name\":\"public\"},{\"variables\":[],\"name\":\"images\"}]"
+    links:
+      - dispatcher:dispatcher
+    ports:
+      - "8080:80"
+  dispatcher:
+    image: semtech/mu-dispatcher:2.0.0
+    links:
+      - search:search
+      - mu-search:mu-search
+    volumes:
+      - ./config/dispatcher:/config
+  database:
+    image: semtech/mu-authorization:latest
+    environment:
+      MU_SPARQL_ENDPOINT: "http://triplestore:8890/sparql"
+    volumes:
+      - ./config/authorization:/config
+  triplestore:
+    image: redpencil/virtuoso:1.0.0
+    environment:
+      SPARQL_UPDATE: "true"
+      DEFAULT_GRAPH: "http://mu.semte.ch/application"
+    ports:
+      - "8890:8890"
+    volumes:
+      - ./data/db:/data
+      - ./config/virtuoso/virtuoso.ini:/data/virtuoso.ini
+  payments:
+    image: madnificent/mollie-payment-service:feature-generic
+#    build:
+#      context: ../mollie-payment-service
+#      dockerfile: Dockerfile
+    links:
+      - database:database
+    environment:
+      MOLLIE_API_KEY: "your mollie api key"
+      MOLLIE_REDIRECT_URL: "http://frontend/checkout/success"
+      MOLLIE_BASE_WEBHOOK_URL: "http://backend/payments/callback"
+
+      # TODO: move to delta listener in order service
+      BACKEND_CALLBACK_HOSTNAME: "order"
+      BACKEND_CALLBACK_PORT: "80"
+      BACKEND_CALLBACK_PATH: "/buy/callback"
+  search:
+    image: semtech/mu-javascript-template
+    ports:
+      - "8888:80"
+    environment:
+      NODE_ENV: "development"
+      ESS_CLIENT_ID: "your application's client id"
+      ESS_CLIENT_SECRET: "your application's client secret"
+      ESS_IDP: "https://login.inrupt.com"
+    links:
+      - database:database
+    volumes:
+      - ../solid-shop-search-service/:/app/
+  mu-search:
+    # image: semtech/mu-search:0.8.0-beta.3
+    build:
+      context: ../mu-search
+      dockerfile: Dockerfile
+    links:
+      - database:database
+      - elasticsearch:elasticsearch
+    volumes:
+      - ./config/search:/config
+  elasticsearch:
+    image: semtech/mu-search-elastic-backend:1.0.1
+    volumes:
+      - ./data/elasticsearch/:/usr/share/elasticsearch/data
+      - ./config/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    environment:
+      - discovery.type=single-node
+  deltanotifier:
+    image: semtech/mu-delta-notifier
+    volumes:
+      - ./config/delta:/config
+  file:
+    image: semtech/mu-file-service:3.2.0
+    links:
+      - database:database
+    volumes:
+      - ./data/files:/share
+  order:
+    image: semtech/mu-javascript-template
+    environment:
+      NODE_ENV: "development"
+      BROKER_WEB_ID: "https://broker.mu/"
+      ESS_CLIENT_ID: "your application's client id"
+      ESS_CLIENT_SECRET: "your application's client secret"
+      ESS_IDP: "https://login.inrupt.com"
+    links:
+      - database:database
+    volumes:
+      - ../solid-shop-order-service/:/app/
