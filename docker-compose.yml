@@ -64,10 +64,7 @@ services:
     volumes:
       - ../solid-shop-search-service/:/app/
   mu-search:
-    # image: semtech/mu-search:0.8.0-beta.3
-    build:
-      context: ../mu-search
-      dockerfile: Dockerfile
+    image: semtech/mu-search:feature-multi-match-fuzzy
     links:
       - database:database
       - elasticsearch:elasticsearch
