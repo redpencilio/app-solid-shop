@@ -24,10 +24,6 @@ defmodule Dispatcher do
     Proxy.forward conn, path, "http://search/sync/"
   end
 
-  match "/query/*path", @json do
-    Proxy.forward conn, path, "http://search/query/"
-  end
-
   match "/buy/*path", @json do
     Proxy.forward conn, path, "http://order/buy/"
   end
