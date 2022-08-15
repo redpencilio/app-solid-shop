@@ -33,11 +33,11 @@ defmodule Dispatcher do
   end
 
   match "/sales/*path", @json do
-    Proxy.forward conn, path, "http://search/sales/"
+    Proxy.forward conn, path, "http://order/sales/"
   end
 
   match "/purchases/*path", @json do
-    Proxy.forward conn, path, "http://search/purchases/"
+    Proxy.forward conn, path, "http://order/purchases/"
   end
 
   match "/payments/*path" do
