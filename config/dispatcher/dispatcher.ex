@@ -21,7 +21,7 @@ defmodule Dispatcher do
   # this file.
 
   match "/sync/*path", @json do
-    Proxy.forward conn, path, "http://search/sync/"
+    Proxy.forward conn, path, "http://order/sync/"
   end
 
   match "/buy/*path", @json do
