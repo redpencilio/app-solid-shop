@@ -59,6 +59,7 @@ services:
       ESS_CLIENT_ID: "your application's client id"
       ESS_CLIENT_SECRET: "your application's client secret"
       ESS_IDP: "https://login.inrupt.com"
+      MU_SPARQL_ENDPOINT: "http://triplestore:8890/sparql"
     links:
       - database:database
     volumes:
