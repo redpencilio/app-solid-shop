@@ -48,10 +48,6 @@ defmodule Dispatcher do
     Proxy.forward conn, path, "http://mu-search/"
   end
 
-  match "/profile/*path", @json do
-    Proxy.forward conn, path, "http://search/profile/"
-  end
-
   match "/auth/*path", @json do
     Proxy.forward conn, path, "http://search/auth/"
   end
