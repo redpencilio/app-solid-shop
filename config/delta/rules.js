@@ -20,7 +20,7 @@ export default [
       }
     },
     callback: {
-      url: 'http://search/delta',
+      url: 'http://sync/delta',
       method: 'POST'
     },
     options: {

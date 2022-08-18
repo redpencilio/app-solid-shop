@@ -49,7 +49,7 @@ defmodule Dispatcher do
   end
 
   match "/auth/*path", @json do
-    Proxy.forward conn, path, "http://search/auth/"
+    Proxy.forward conn, path, "http://sync/auth/"
   end
 
   post "/files/*path", %{ accept: %{ img: true, json: true } } do
