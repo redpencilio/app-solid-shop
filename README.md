@@ -44,6 +44,12 @@ An example on how to do this is shown below.
 - [mu-identifier](https://github.com/mu-semtech/mu-identifier): Handles session identification
 - [mu-dispatcher](https://github.com/mu-semtech/mu-dispatcher): Dispatches requests to the right microservices
 
+## Contribution
+
+We make use of [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+When making changes to a pull request, we prefer to update the existing commits with a rebase instead of appending new commits.
+
 ## Payments flow
 
 Below, the payments flow and communication between the frontend and the different services is specified.
