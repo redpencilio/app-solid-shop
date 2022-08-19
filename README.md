@@ -13,6 +13,23 @@ The Solid Shop is a user-powered shopping ecosystem by use of SOLID PODs. This b
     * (At the end, fill in your API key via the profile page and/or the `MOLLIE_API_KEY` environment variable, see "Mollie API Key" below for more information)
 * `docker-compose up -d` to start the related services
 
+When developing, you might want to directly have the changes in the services available in your local stack.
+To do this, you can create a `docker-compose.override.yml` file and put the changes in there.
+An example on how to do this is shown below.
+
+```yaml
+  # This will automatically detect changes and restart the service
+  order:
+    image: semtech/mu-javascript-template
+    volumes:
+      - ../solid-shop-order-service/:/app/:cached
+  # This will build the image from the local source, use `docker-compose build` together with `docker-compose up -d` to restart the service
+  payments:
+    build:
+      context: ../mollie-payment-service
+      dockerfile: Dockerfile
+```
+
 ## Payments flow
 
 Below, the payments flow and communication between the frontend and the different services is specified.
