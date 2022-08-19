@@ -30,6 +30,20 @@ An example on how to do this is shown below.
       dockerfile: Dockerfile
 ```
 
+## Used services
+- [frontend-solid-shop](https://github.com/redpencilio/frontend-solid-shop): The frontend of the Solid Shop
+- [solid-shop-order-service](https://github.com/redpencilio/solid-shop-order-service): The order service of the Solid Shop, functions quite like the backend of the Solid Shop
+- [solid-sync-service](https://github.com/redpencilio/solid-sync-service): Synchronize data between the user's Solid PODs and the triple store
+- [mollie-payment-service](https://github.com/madnificent/mollie-payment-service): Handles the payments of the Solid Shop via Mollie
+- [mu-search](https://github.com/mu-semtech/mu-search): Provides fuzzy search for the offerings in the Solid Shop
+- [mu-search-elastic-backend](https://github.com/mu-semtech/mu-search-elastic-backend): The Elasticsearch backend of the mu-search service
+- [delta-notifier](https://github.com/mu-semtech/delta-notifier): Notifies the Solid Shop about changes in the triple store, used for e.g. the tasks and the search
+- [file-service](https://github.com/mu-semtech/file-service): Handles the image uploads on product creation and update
+- [docker-virtuoso](https://github.com/redpencilio/docker-virtuoso): The virtuoso service for the triple store, where the Solid Shop data is stored
+- [mu-authorization](https://github.com/mu-semtech/mu-authorization): Provides authorization for the Solid Shop, so not everyone can e.g. access the secret keys and other information
+- [mu-identifier](https://github.com/mu-semtech/mu-identifier): Handles session identification
+- [mu-dispatcher](https://github.com/mu-semtech/mu-dispatcher): Dispatches requests to the right microservices
+
 ## Payments flow
 
 Below, the payments flow and communication between the frontend and the different services is specified.
