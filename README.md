@@ -115,15 +115,15 @@ To authenticate once:
     - sends `email`, `password` and `name='solid-shop'` to the CSS IDP at `${IDPURL}/idp/credentials`
     - generates a token
     - sends back the client id and client secret
-- **frontend ---> search**
-    - sends `clientWebId`, `clientId`, `clientSecret`, `idpUrl` and `idpType='css'` to the search server at `/profile/credentials`
+- **frontend ---> sync**
+    - sends `clientWebId`, `clientId`, `clientSecret`, `idpUrl` and `idpType='css'` to the solid-sync-service at `/auth/credentials`
     - saves the credentials to the triple store
 
 On reading from or writing to the user's POD:
-- **search ---> CSS IDP**
+- **sync ---> CSS IDP**
     - sends `clientId`, `clientSecret` to the CSS IDP at `${IDPURL}/.oidc/token`
     - requests access token
-- **search ---> user's POD**
+- **sync ---> user's POD**
     - uses the access token to send authenticated requests to the user's POD
 
 ### ESS
@@ -133,18 +133,18 @@ Uses [Access Policies: Universal API](https://docs.inrupt.com/developer-tools/ja
 To authenticate once:
 - **user ---> frontend**
     - clicks the `Login` button
-- **frontend ---> search**
+- **frontend ---> sync**
     - GET /auth/ess/webId
     - gets the application's ESS WebId which is needed in the next step
 - **frontend ---> ESS IDP**
     - sends access requests using the `@inrupt/solid-client` library for the needed resources
-- **frontend ---> search**
-    - sends `clientWebId` and `idpType='ess'` to the search server at `/profile/credentials`
+- **frontend ---> sync**
+    - sends `clientWebId` and `idpType='ess'` to the solid-sync-service at `/auth/credentials`
     - saves the credentials (just `idpType` for ESS) to the triple store
 
 On reading from or writing to the user's POD:
-- **search ---> user's POD**
-    - on startup of the search service, it will login and create an authenticated session using the `ESS_CLIENT_ID` and `ESS_CLIENT_SECRET` environment variables which will then be used to send authenticated requests to the user's POD
+- **sync ---> user's POD**
+    - on startup of the solid-sync-service, it will log in and create an authenticated session using the `ESS_CLIENT_ID` and `ESS_CLIENT_SECRET` environment variables which will then be used to send authenticated requests to the user's POD
     - uses the authenticated session to send authenticated requests to the user's POD
 
 #### Setup ESS
