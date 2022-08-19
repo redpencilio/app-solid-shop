@@ -16,27 +16,51 @@ The Solid Shop is a user-powered shopping ecosystem by use of SOLID PODs. This b
 ## Payments flow
 
 Below, the payments flow and communication between the frontend and the different services is specified.
-- **frontend -> search**
+- **frontend ---> order**
     - initiate order, send back `orderId`
-- **frontend -> payment**
-    - *location rewrite: user goes to payment service*
-    - send `orderId`, initiate payment, save payment info to triple store
-- **payment -> mollie**
-    - *location rewrite: user goes to Mollie checkout page to pay*
-    - handle payment
-- **mollie -> frontend**
-    - *location rewrite: user goes back to application frontend*
-    - go to redirect url
-- **mollie -> payment**
-    - call callback url (sends `orderId`), update payment info in triple store (add `paymentId`, update `orderStatus`) by querying Mollie API
-- **payment -> search**
-    - query triple store and accordingly update seller & buyer PODs
+- **order ---> sync**
+  - *via task*
+  - send `orderId` as `ext:order` triple
+  - query triple store and accordingly update user PODs
+- **frontend ---> payment**
+  - *location rewrite: user goes to payment service*
+  - send `orderId`, initiate payment, save payment info to triple store
+- **payment ---> mollie**
+  - *location rewrite: user goes to Mollie checkout page to pay*
+  - handle payment
+- **mollie ---> frontend**
+  - *location rewrite: user goes back to application frontend*
+  - go to redirect url
+- **mollie ---> payment**
+  - call callback url (sends `orderId`), update payment info in triple store (add `paymentId`, update `orderStatus`) by querying Mollie API
+- **payment ---> order**
+  - gives the chance to do extra stuff, and sends a task to the sync service to update the user PODs
+- **order ---> sync**
+  - *via task*
+  - send `orderId` as `ext:order` triple
+  - query triple store and accordingly update buyer and seller PODs
 
 ### Mollie API Key
 
 You can specify the application's Mollie API key via the `MOLLIE_API_KEY` environment variable in the `docker-compose.yml` file.  
 It will use this API key to handle payments if there is no Mollie API key specified for the seller in the triple store.  
 However, specifying a Mollie API key for the seller in the triple store (`?sellerWebId ext:mollieApiKey ?mollieApiKey`) will override the default API key, letting the buyer directly pay to the seller.
+
+### Tasks
+
+The Solid Shop uses the [solid-sync-service](https://github.com/redpencilio/solid-sync-service) to update the user PODs.
+To let the Solid Sync Service know what and when to update, it sends a task via the [delta-notifier](https://github.com/mu-semtech/delta-notifier).
+
+The used tasks in the Solid Shop are described as follows:
+```
+?task a ext:Task;
+    ext:taskType ?taskType;
+    ext:dataFlow ?dataFlow;
+    ext:taskStatus "pending".
+OPTIONAL { ?task ext:order ?orderId. }  # in case the task is related to an order creation or update, ?dataFlow = "DbToPod"
+OPTIONAL { ?task ext:pod ?pod; ext:webId ?webId. }  # in case the task is related to a DB update, ?dataFlow = "PodToDb"
+VALUES ?taskType { ext:SavedOrderTask ext:UpdatedOrderTask ext:SyncOfferingsTask }
+```
 
 ## Authentication flow
 
