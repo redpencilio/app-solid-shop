@@ -50,6 +50,10 @@ We make use of [Conventional Commits](https://www.conventionalcommits.org/en/v1.
 
 When making changes to a pull request, we prefer to update the existing commits with a rebase instead of appending new commits.
 
+The project board of this project can be found [here](https://project.redpencil.io/project/solid-webshop/kanban).
+
+Questions? Join our Matrix room [#solid-shop](https://matrix.to/#/!dzdBEfBtjWRNytDgoP:chat.semantic.works).
+
 ## Payments flow
 
 Below, the payments flow and communication between the frontend and the different services is specified.
