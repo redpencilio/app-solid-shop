@@ -91,9 +91,6 @@ services:
     environment:
       NODE_ENV: "development"
       BROKER_WEB_ID: "https://broker.mu/"
-      ESS_CLIENT_ID: "your application's client id"
-      ESS_CLIENT_SECRET: "your application's client secret"
-      ESS_IDP: "https://login.inrupt.com"
     links:
       - database:database
     volumes:
