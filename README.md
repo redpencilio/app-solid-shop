@@ -72,21 +72,21 @@ As there is no Solid spec for this yet at the time of writing, non-spec behavior
 [Non-spec behavior of CSS.](https://communitysolidserver.github.io/CommunitySolidServer/4.0/client-credentials/)
 
 To authenticate once:
-- **user -> frontend**
+- **user ---> frontend**
     - enters `email`, `password` and `IDP URL`
-- **frontend -> CSS IDP**
+- **frontend ---> CSS IDP**
     - sends `email`, `password` and `name='solid-shop'` to the CSS IDP at `${IDPURL}/idp/credentials`
     - generates a token
     - sends back the client id and client secret
-- **frontend -> search**
+- **frontend ---> search**
     - sends `clientWebId`, `clientId`, `clientSecret`, `idpUrl` and `idpType='css'` to the search server at `/profile/credentials`
     - saves the credentials to the triple store
 
 On reading from or writing to the user's POD:
-- **search -> CSS IDP**
+- **search ---> CSS IDP**
     - sends `clientId`, `clientSecret` to the CSS IDP at `${IDPURL}/.oidc/token`
     - requests access token
-- **search -> user's POD**
+- **search ---> user's POD**
     - uses the access token to send authenticated requests to the user's POD
 
 ### ESS
@@ -94,19 +94,19 @@ On reading from or writing to the user's POD:
 Uses [Access Policies: Universal API](https://docs.inrupt.com/developer-tools/javascript/client-libraries/tutorial/manage-access-policies/#change-agent-access) in the frontend and [Authenticate with Statically Registered Client Credentials](https://docs.inrupt.com/developer-tools/javascript/client-libraries/tutorial/authenticate-nodejs-script/#authenticate-with-statically-registered-client-credentials) in the backend.
 
 To authenticate once:
-- **user -> frontend**
+- **user ---> frontend**
     - clicks the `Login` button
-- **frontend -> search**
+- **frontend ---> search**
     - GET /auth/ess/webId
     - gets the application's ESS WebId which is needed in the next step
-- **frontend -> ESS IDP**
+- **frontend ---> ESS IDP**
     - sends access requests using the `@inrupt/solid-client` library for the needed resources
-- **frontend -> search**
+- **frontend ---> search**
     - sends `clientWebId` and `idpType='ess'` to the search server at `/profile/credentials`
     - saves the credentials (just `idpType` for ESS) to the triple store
 
 On reading from or writing to the user's POD:
-- **search -> user's POD**
+- **search ---> user's POD**
     - on startup of the search service, it will login and create an authenticated session using the `ESS_CLIENT_ID` and `ESS_CLIENT_SECRET` environment variables which will then be used to send authenticated requests to the user's POD
     - uses the authenticated session to send authenticated requests to the user's POD
 
