@@ -63,7 +63,7 @@ services:
     volumes:
       - ../solid-sync-service/:/app/
   mu-search:
-    image: semtech/mu-search:feature-multi-match-fuzzy
+    image: semtech/mu-search:latest
     links:
       - database:database
       - elasticsearch:elasticsearch
